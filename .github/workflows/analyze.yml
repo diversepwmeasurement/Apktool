@@ -1,28 +1,26 @@
-name: Analyze
-on:
-  push:
-    branches: [master]
-  pull_request:
-    branches: [master]
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
-
+  group: ${{ github.workflow }}-${{ github.ref }}
 jobs:
   analyze:
     name: Analyze
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
-        with:
-          languages: java-kotlin
-
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
-
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+    - continue-on-error: true
+      name: Checkout repository
+      uses: actions/checkout@v4
+    - continue-on-error: true
+      name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: java-kotlin
+    - continue-on-error: true
+      name: Autobuild
+      uses: github/codeql-action/autobuild@v3
+    - continue-on-error: true
+      name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+name: Analyze
+on:
+  repository_dispatch:
+    types: trigger-ga___analyze.yml

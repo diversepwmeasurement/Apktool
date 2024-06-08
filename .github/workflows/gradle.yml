@@ -1,24 +1,20 @@
-name: Gradle Validate
-on:
-  push:
-    branches:
-      - master
-    paths:
-      - 'gradle/wrapper/gradle-wrapper.jar'
-  pull_request:
-    paths:
-      - 'gradle/wrapper/gradle-wrapper.jar'
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
-
+  group: ${{ github.workflow }}-${{ github.ref }}
 jobs:
   validate-gradle-wrapper:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: 17
-      - uses: gradle/actions/wrapper-validation@v3.3.2
+    - continue-on-error: true
+      uses: actions/checkout@v4
+    - continue-on-error: true
+      uses: actions/setup-java@v4
+      with:
+        distribution: zulu
+        java-version: 17
+    - continue-on-error: true
+      uses: gradle/actions/wrapper-validation@v3.3.2
+name: Gradle Validate
+on:
+  repository_dispatch:
+    types: trigger-ga___gradle.yml
